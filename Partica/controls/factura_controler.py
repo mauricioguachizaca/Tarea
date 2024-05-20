@@ -17,3 +17,26 @@ class FacturaController:
         
         # Devolver la factura creada
         return factura
+
+    def obtener_factura(self, numero):
+        for factura in self.facturas:
+            if factura.numero == numero:
+                return factura
+        return None
+
+    def eliminar_factura(self, numero):
+        factura = self.obtener_factura(numero)
+        if factura:
+            self.facturas.remove(factura)
+            return True
+        return False
+
+    def editar_factura(self, numero, nuevo_numero, nuevo_ruc, nuevo_monto, nuevo_tipo_ruc):
+        factura = self.obtener_factura(numero)
+        if factura:
+            factura.numero = nuevo_numero
+            factura.ruc = nuevo_ruc
+            factura.monto = nuevo_monto
+            factura.tipo_ruc = nuevo_tipo_ruc
+            return factura
+        return None

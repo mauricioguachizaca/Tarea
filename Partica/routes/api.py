@@ -17,7 +17,7 @@ def home():
         200
     )
 
-@api.route('/api/facturas', methods=['POST'])
+@api.route('/facturas', methods=['POST'])
 def guardar_factura():
     data = request.json
     try:
@@ -37,7 +37,6 @@ def guardar_factura():
             jsonify({"msg": f"Falta el campo {str(e)}", "code": 400}),
             400
         )
-
 
 @api.route('/api/retenciones', methods=['GET'])
 def lista_retenciones():

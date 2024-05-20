@@ -1,14 +1,13 @@
 from flask import Flask
-def create_app():
+from flask_cors import CORS
+from routes.api import api
+from routes.router import router
 
-    app = Flask(__name__, instance_relative_config=False)
+app = Flask(__name__)
+CORS(app)
 
-    app.config.from_object('config.config.Config')
+app.register_blueprint(api, url_prefix='/api')
+app.register_blueprint(router)
 
-    with app.app_context():
-        #from routes.api import api
-        #app.register_blueprint(api)
-        from routes.router import router
-        app.register_blueprint(router)
-    return app
-
+if __name__ == '__main__':
+    app.run(debug=True)

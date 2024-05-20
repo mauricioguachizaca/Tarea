@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tarea de Introducción</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4em;
+            margin: 0.5em 0;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin: 0.5em 0;
+        }
+
+        button {
+            padding: 0.5em 1em;
+            margin: 0.5em;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            text-decoration: none; /* Para quitar la decoración de enlace */
+            display: inline-block; /* Añadir este estilo para que el botón se comporte como un enlace */
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <h1>Practica 1</h1>
+        <p>Estructura de datos</p>
+        <a href="/facturas/formulario"><button>Crear factura</button></a>
+        <a href="/facturas"><button>Ver facturas</button></a>
+    </div>
+</body>
+</html>
