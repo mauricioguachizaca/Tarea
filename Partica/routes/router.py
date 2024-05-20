@@ -1,85 +1,50 @@
-from flask import Blueprint, jsonify, make_response, request, render_template, redirect, abort
-from controls.personaDaoControl import PersonaDaoControl
-from flask_cors import CORS
+from flask import Blueprint, render_template, redirect, request, abort
+from controls.factura_controler import FacturaController
+from controls.retencion_controler import RetencionController
+from controls.exception.custom_exceptions import TipoRUCError
+from flask import make_response
+
 router = Blueprint('router', __name__)
-#get para presentar los datos
-#post para enviar los datos, modificar y iniciar sesion
-# monolito
+
+factura_controller = FacturaController()
+retencion_controller = RetencionController()
 
 @router.route('/')
 def home():
-    return render_template('template.html')
+    return render_template('home.html')
 
-# RENDERS A LOS TEMPLATES
-@router.route('/personas')
-def ver_personas():
-    pd = PersonaDaoControl()
-    return render_template('nene/lista.html', lista=pd.to_dict())
+@router.route('/facturas')
+def ver_facturas():
+    historial = retencion_controller.mostrar_historial()
+    return render_template('facturas/lista.html', lista=historial)
 
-@router.route('/personas/formulario')
+@router.route('/facturas/formulario')
 def ver_guardar():
-    return render_template('nene/guardar.html')
+    return render_template('facturas/guardar.html')
 
-@router.route('/personas/editar/<pos>')
-def ver_editar(pos):
-    pd = PersonaDaoControl()
-    nene = pd._list().get(int(pos)-1)
-    print(nene)
-    return render_template('nene/editar.html', data=nene)
-
-
-#LOGICAS
-# GUARDAR PERSONA POST
-@router.route('/personas/guardar', methods=['POST'])
-def guardar_persona():
-    pd = PersonaDaoControl()
+@router.route('/facturas/guardar', methods=['POST'])
+def guardar_factura():
     data = request.form
-    print(data['direccion'])
-    if not 'nombre' in data.keys() or not 'apellidos' in data.keys() or not 'telefono' in data.keys() or not 'dni' in data.keys() or not 'direccion' in data.keys():
-        abort(400)
-    #TODO validar
-    pd._persona._nombre = data['nombre']
-    pd._persona._apellidos = data['apellidos']
-    pd._persona._telefono = data['telefono']
-    pd._persona._dni = data['dni']
-    pd._persona._direccion = data['direccion']
-    pd._persona._tipoIdentificacion = "CEDULA"
-    pd.save
-    return redirect('/personas', code=302)
-
-
-
-
-
-
-
-@router.route('/personas/modificar', methods=['POST'])
-def modificar_persona():
-    pd = PersonaDaoControl()
+    try:
+        factura = factura_controller.crear_factura(data['numero'], data['ruc'], float(data['monto']), data['tipo_ruc'])
+        retencion_controller.agregar_retencion(factura)
+        return redirect('/facturas', code=302)
+    except TipoRUCError as e:
+        return make_response(str(e), 400)
+    except KeyError as e:
+        return make_response(f"Falta el campo {str(e)}", 400)
+    
+@router.route('/facturas/modificar', methods=['POST'])
+def modificar_factura():
     data = request.form
-    pos = int(data['id'])-1
-    nene = pd._list().get(pos)
-   
-    print('----------------------------------')
-    print(nene)
-    print('----------------------------------')
-    print(pos)
-    if not 'nombre' in data.keys() or not 'apellidos' in data.keys() or not 'telefono' in data.keys() or not 'dni' in data.keys() or not 'direccion' in data.keys():
-        abort(400)
-    #TODO validar
-    pd._persona = nene
-    pd._persona._nombre = data['nombre']
-    pd._persona._apellidos = data['apellidos']
-    pd._persona._telefono = data['telefono']
-    pd._persona._dni = data['dni']
-    pd._persona._direccion = data['direccion']
-    pd._persona._tipoIdentificacion = "CEDULA"
-    pd.merge(pos)
-    return redirect('/personas', code=302)
-
-
-
-
-
-
-
+    pos = int(data['id']) - 1
+    historial = retencion_controller.mostrar_historial()
+    try:
+        factura = historial[pos].factura
+        factura_controller.modificar_factura(factura, data)
+        retencion_controller.actualizar_retencion(pos, factura)
+        return redirect('/facturas', code=302)
+    except IndexError:
+        return make_response("Índice fuera de rango", 400)
+    except KeyError as e:
+        return make_response(f"Falta el campo {str(e)}", 400)

@@ -24,5 +24,4 @@ class RetencionController:
         self.historial = self.dao.cargar_historial()
 
     def mostrar_historial(self):
-        for retencion in self.historial:
-            print(retencion)
+        return list(self.historial)

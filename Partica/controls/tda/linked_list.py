@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, data=None):
+    def __init__(self, data):
         self.data = data
         self.next = None
 
@@ -8,19 +8,17 @@ class LinkedList:
         self.head = None
 
     def append(self, data):
+        new_node = Node(data)
         if not self.head:
-            self.head = Node(data)
-        else:
-            current = self.head
-            while current.next:
-                current = current.next
-            current.next = Node(data)
+            self.head = new_node
+            return
+        last_node = self.head
+        while last_node.next:
+            last_node = last_node.next
+        last_node.next = new_node
 
     def __iter__(self):
-        current = self.head
-        while current:
-            yield current.data
-            current = current.next
-
-    def __repr__(self):
-        return "->".join([str(item) for item in self])
+        node = self.head
+        while node:
+            yield node.data
+            node = node.next

@@ -13,5 +13,11 @@ class Retencion:
         else:
             return 0
 
+    def to_dict(self):
+        return {
+            'factura': self.factura.to_dict(),
+            'retencion': self.retencion
+        }
+
     def __repr__(self):
         return f"Factura Nro: {self.factura.numero}, RUC: {self.factura.ruc}, Monto: {self.factura.monto}, Retención: {self.retencion}"
