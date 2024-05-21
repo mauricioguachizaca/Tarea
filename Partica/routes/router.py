@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, request, make_response
+from flask import Blueprint, render_template, redirect, request, jsonify, make_response
 from controls.factura_controler import FacturaController
 from controls.retencion_controler import RetencionController
 from controls.exception.custom_exceptions import TipoRUCError
@@ -33,30 +33,31 @@ def guardar_factura():
     except KeyError as e:
         return make_response(f"Falta el campo {str(e)}", 400)
 
-@router.route('/facturas/editar/<int:numero>', methods=['GET', 'POST'])
-def editar_factura(numero):
-    if request.method == 'GET':
-        factura = factura_controller.obtener_factura(numero)
+@router.route('/facturas/<int:id>', methods=['GET'])
+def obtener_factura(id):
+    factura = factura_controller.obtener_factura(id)
+    if factura:
+        return jsonify(factura.to_dict())
+    return make_response(f"Factura con ID {id} no encontrada", 404)
+
+@router.route('/facturas/eliminar/<int:id>', methods=['POST'])
+def eliminar_factura(id):
+    if factura_controller.eliminar_factura(id):
+        return '', 204
+    else:
+        return make_response(f"Factura con ID {id} no encontrada", 404)
+
+@router.route('/facturas/editar/<int:id>', methods=['POST'])
+def editar_factura(id):
+    data = request.form
+    try:
+        factura = factura_controller.editar_factura(id, data['numero'], data['ruc'], float(data['monto']), data['tipo_ruc'])
         if factura:
-            return render_template('facturas/editar.html', factura=factura)
+            retencion_controller.actualizar_retencion(factura)
+            return '', 204
         else:
-            return make_response("Factura no encontrada", 404)
-    elif request.method == 'POST':
-        data = request.form
-        try:
-            nueva_factura = factura_controller.editar_factura(numero, data['nuevo_numero'], data['nuevo_ruc'], float(data['nuevo_monto']), data['nuevo_tipo_ruc'])
-            if nueva_factura:
-                return redirect('/facturas', code=302)
-            else:
-                return make_response("Factura no encontrada", 404)
-        except KeyError as e:
-            return make_response(f"Falta el campo {str(e)}", 400)
-
-@router.route('/facturas/eliminar/<int:numero>', methods=['POST'])
-def eliminar_factura(numero):
-    if request.method == 'POST':
-        if factura_controller.eliminar_factura(numero):
-            return redirect('/facturas', code=302)
-        else:
-            return make_response("Factura no encontrada", 404)
-
+            return make_response(f"Factura con ID {id} no encontrada", 404)
+    except TipoRUCError as e:
+        return make_response(str(e), 400)
+    except KeyError as e:
+        return make_response(f"Falta el campo {str(e)}", 400)

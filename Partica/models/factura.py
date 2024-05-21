@@ -1,9 +1,13 @@
+# models/factura.py
+
 class Factura:
-    def __init__(self, numero, ruc, monto, tipo_ruc):
+    def __init__(self, id, numero, ruc, monto, tipo_ruc):
+        self.id = id
         self.numero = numero
         self.ruc = ruc
         self.monto = monto
         self.tipo_ruc = tipo_ruc
+
 
     @property
     def _numero(self):
@@ -39,6 +43,7 @@ class Factura:
 
     def to_dict(self):
         return {
+            'id': self.id,
             'numero': self.numero,
             'ruc': self.ruc,
             'monto': self.monto,
@@ -46,6 +51,4 @@ class Factura:
         }
     
     def __str__(self):  
-        return f'Numero: {self.numero}, Ruc: {self.ruc}, Monto: {self.monto}, Tipo Ruc: {self.tipo_ruc}'  
-    
-
+        return f'ID: {self.id}, Numero: {self.numero}, Ruc: {self.ruc}, Monto: {self.monto}, Tipo Ruc: {self.tipo_ruc}'  
