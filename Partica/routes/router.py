@@ -46,18 +46,3 @@ def eliminar_factura(id):
         return '', 204
     else:
         return make_response(f"Factura con ID {id} no encontrada", 404)
-
-@router.route('/facturas/editar/<int:id>', methods=['POST'])
-def editar_factura(id):
-    data = request.form
-    try:
-        factura = factura_controller.editar_factura(id, data['numero'], data['ruc'], float(data['monto']), data['tipo_ruc'])
-        if factura:
-            retencion_controller.actualizar_retencion(factura)
-            return '', 204
-        else:
-            return make_response(f"Factura con ID {id} no encontrada", 404)
-    except TipoRUCError as e:
-        return make_response(str(e), 400)
-    except KeyError as e:
-        return make_response(f"Falta el campo {str(e)}", 400)

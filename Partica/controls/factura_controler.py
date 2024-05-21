@@ -33,14 +33,4 @@ class FacturaController:
             return True
         return False
 
-    def editar_factura(self, id, numero, ruc, monto, tipo_ruc):
-        factura = self.obtener_factura(id)
-        if factura:
-            if tipo_ruc not in ['educativo', 'profesional']:
-                raise TipoRUCError(tipo_ruc)
-            factura.numero = numero
-            factura.ruc = ruc
-            factura.monto = monto
-            factura.tipo_ruc = tipo_ruc
-            return factura
-        return None
+

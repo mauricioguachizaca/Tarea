@@ -90,7 +90,6 @@
                 <td>{{ retencion.factura.tipo_ruc }}</td>
                 <td>{{ retencion.retencion }}</td>
                 <td>
-                    <button class="button edit-button" data-id="{{ retencion.factura.id }}">Editar</button>
                     <button class="button delete-button" data-id="{{ retencion.factura.id }}">Eliminar</button>
                 </td>
             </tr>
@@ -100,22 +99,7 @@
     <a href="/facturas/formulario">Agregar Factura</a>
 
     <!-- Formulario de edición -->
-    <div id="edit-form-container" class="hidden">
-        <h2>Editar Factura</h2>
-        <form id="edit-form">
-            <input type="hidden" id="edit-id">
-            <label for="edit-numero">Número de Factura:</label>
-            <input type="text" id="edit-numero" name="numero"><br>
-            <label for="edit-ruc">RUC:</label>
-            <input type="text" id="edit-ruc" name="ruc"><br>
-            <label for="edit-monto">Monto:</label>
-            <input type="number" id="edit-monto" name="monto"><br>
-            <label for="edit-tipo-ruc">Tipo de RUC:</label>
-            <input type="text" id="edit-tipo-ruc" name="tipo_ruc"><br>
-            <button type="submit" class="button">Guardar Cambios</button>
-            <button type="button" class="button" id="cancel-edit">Cancelar</button>
-        </form>
-    </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -149,24 +133,6 @@
         }
     });
 
-    editForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const id = document.getElementById('edit-id').value;
-        const formData = new FormData(editForm);
-        fetch(`/facturas/editar/${id}`, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (response.ok) {
-                location.reload();
-            }
-        });
-    });
-
-    cancelEditButton.addEventListener('click', () => {
-        editFormContainer.classList.add('hidden');
-    });
 });
 
     </script>
