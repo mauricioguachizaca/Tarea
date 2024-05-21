@@ -1,5 +1,3 @@
-# models/factura.py
-
 class Factura:
     def __init__(self, id, numero, ruc, monto, tipo_ruc):
         self.id = id
@@ -7,7 +5,14 @@ class Factura:
         self.ruc = ruc
         self.monto = monto
         self.tipo_ruc = tipo_ruc
-
+    
+    @property
+    def _id(self):
+        return self.id
+    
+    @_id.setter
+    def _id(self, value):
+        self.id = value
 
     @property
     def _numero(self):

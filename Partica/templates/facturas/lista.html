@@ -103,38 +103,22 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-    const facturasTable = document.getElementById('facturas-table');
-    const editFormContainer = document.getElementById('edit-form-container');
-    const editForm = document.getElementById('edit-form');
-    const cancelEditButton = document.getElementById('cancel-edit');
+            const facturasTable = document.getElementById('facturas-table');
 
-    facturasTable.addEventListener('click', (event) => {
-        if (event.target.classList.contains('edit-button')) {
-            const id = event.target.dataset.id;
-            fetch(`/facturas/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('edit-id').value = data.id;
-                    document.getElementById('edit-numero').value = data.numero;
-                    document.getElementById('edit-ruc').value = data.ruc;
-                    document.getElementById('edit-monto').value = data.monto;
-                    document.getElementById('edit-tipo_ruc').value = data.tipo_ruc;
-                    editFormContainer.classList.remove('hidden');
-                });
-        } else if (event.target.classList.contains('delete-button')) {
-            const id = event.target.dataset.id;
-            fetch(`/facturas/eliminar/${id}`, { method: 'POST' })
-                .then(response => {
-                    if (response.ok) {
-                        const row = event.target.closest('tr');
-                        row.remove();
-                    }
-                });
-        }
-    });
+            facturasTable.addEventListener('click', (event) => {
+                if (event.target.classList.contains('delete-button')) {
+                    const id = event.target.dataset.id;
+                    fetch(`/facturas/eliminar/${id}`, { method: 'POST' })
+                        .then(response => {
+                            if (response.ok) {
+                                const row = event.target.closest('tr');
+                                row.remove();
+                            }
+                        });
+                }
+            });
 
-});
-
+        });
     </script>
 </body>
 </html>

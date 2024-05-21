@@ -1,0 +1,22 @@
+[
+    {
+        "factura": {
+            "id": 1,
+            "numero": "0001",
+            "ruc": "1150259313",
+            "monto": 1000.0,
+            "tipo_ruc": "educativo"
+        },
+        "retencion": 80.0
+    },
+    {
+        "factura": {
+            "id": 2,
+            "numero": "0002",
+            "ruc": "1140259312",
+            "monto": 3000.0,
+            "tipo_ruc": "educativo"
+        },
+        "retencion": 240.0
+    }
+]
